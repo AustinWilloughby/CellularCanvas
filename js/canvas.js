@@ -23,18 +23,26 @@ class Canvas {
             this.pixelGrid[x] = new Array(this.verticalPixelCount);
             for (let y = 0; y < this.verticalPixelCount; y++) {
                 this.pixelGrid[x][y] = new Cell(x, y, pixelSize);
+                this.pixelGrid[x][y].drawColor = `rgb(255, ${x}, ${y})`;
             }
         }
 
+        this.flaggedPixels = [];
+
         // Draw all the cells to the canvas
         this.drawAll();
+        
+        this.updatePixel(4, 3, "green");
+        this.drawFlagged();
+
+
     }
 
     // Function for handing canvas resizing.
     resizeCanvas() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-        this.draw();
+        this.drawAll();
     }
 
     // Redraw all of the cells in our cell array.
@@ -46,6 +54,15 @@ class Canvas {
         }
     }
 
+    drawFlagged() {
+        this.flaggedPixels.forEach((pixel) => {
+            this.drawSinglePixel(pixel.xCoord, pixel.yCoord);
+        });
+
+        this.flaggedPixels = [];
+    }
+
+
     // Helper function for redrawing a single cell to the canvas.
     drawSinglePixel(x, y) {
         this.ctx.save();
@@ -56,7 +73,14 @@ class Canvas {
             pixel.topLeftY,
             pixel.bottomRightX,
             pixel.bottomRightY);
+            console.dir("drawing " + pixel.topLeftX + " " + pixel.topLeftY);
+            console.dir(pixel.bottomRightX + " " + pixel.bottomRightY);
 
         this.ctx.restore();
+    }
+
+    updatePixel(x, y, color) {
+        this.pixelGrid[x][y].drawColor = color;
+        this.flaggedPixels.push(this.pixelGrid[x][y]);
     }
 };

@@ -13,5 +13,6 @@ class Cell {
         this.bottomRightY = (y + 1) * pixelSize;
 
         this.drawColor = "black";
+        this.redraw = true;
     }
 }
