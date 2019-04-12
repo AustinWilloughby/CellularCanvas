@@ -6,11 +6,8 @@ class Cell {
         this.xCoord = x;
         this.yCoord = y;
 
-        this.topLeftX = x * pixelSize;
-        this.topLeftY = y * pixelSize;
-
-        this.bottomRightX = (x + 1) * pixelSize;
-        this.bottomRightY = (y + 1) * pixelSize;
+        this.drawXPosition = x * pixelSize;
+        this.drawYPosition = y * pixelSize;
 
         this.drawColor = "black";
         this.redraw = true;
