@@ -11,16 +11,21 @@ class Canvas {
         this.pixelSize = pxSize;
 
         this.ctx = this.canvas.getContext("2d");
-        
+
         this.resizeCanvas();
-        
+
+        this.lastFrameTime = Date.now();
+
+        this.updateLoop = this.updateLoop.bind(this);
+        window.requestAnimationFrame(this.updateLoop);
+
         window.addEventListener('resize', () => {
             this.resizeCanvas();
         });
     }
 
     // Function for handing canvas resizing.
-    resizeCanvas() {        
+    resizeCanvas() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
 
@@ -28,24 +33,35 @@ class Canvas {
         this.horizontalPixelCount = Math.trunc(this.canvas.width / this.pixelSize) + 1;
         this.verticalPixelCount = Math.trunc(this.canvas.height / this.pixelSize) + 1;
 
-        // Create our 2d array to hold our cells and populate it.
-        this.pixelGrid = new Array(this.horizontalPixelCount);
-        for (let x = 0; x < this.horizontalPixelCount; x++) {
-            this.pixelGrid[x] = new Array(this.verticalPixelCount);
-            for (let y = 0; y < this.verticalPixelCount; y++) {
-                this.pixelGrid[x][y] = new Cell(x, y, this.pixelSize);
-                this.pixelGrid[x][y].drawColor = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
-            }
-        }
-
         // Setup our array of "flagged pixels". This will be used internally
         // to keep track of all pixels that have been updated since the last
         // draw call. We can use it to optimally redraw only the pixels that
         // have changed to cutdown on draw time.
         this.flaggedPixels = [];
 
+        // Create our 2d array to hold our cells and populate it.
+        this.pixelGrid = new Array(this.horizontalPixelCount);
+        for (let x = 0; x < this.horizontalPixelCount; x++) {
+            this.pixelGrid[x] = new Array(this.verticalPixelCount);
+            for (let y = 0; y < this.verticalPixelCount; y++) {
+                this.pixelGrid[x][y] = new Cell(x, y, this.pixelSize, this);
+                this.pixelGrid[x][y].updateCell(Math.random() * 255, Math.random() * 255, Math.random() * 255, 1);
+            }
+        }
+
         // Draw all the cells to the canvas
-        this.drawAll();
+        this.drawFlagged();
+    }
+
+    updateLoop() {
+
+        //const deltaTime = Date.now() - this.lastFrameTime;
+        //this.lastFrameTime = Date.now();
+
+        ruleset(this.pixelGrid, this.horizontalPixelCount, this.verticalPixelCount);
+        this.drawFlagged();
+
+        requestAnimationFrame(this.updateLoop);
     }
 
     // Redraw all of the cells in our cell array.
@@ -55,7 +71,7 @@ class Canvas {
                 this.drawSinglePixel(x, y);
             }
         }
-        
+
         // If the entire canvas has been redrawn, then there is
         // no point to keeping a backlog of the pixels that had
         // been previously flagged.
@@ -67,6 +83,12 @@ class Canvas {
     // draw call. By only redrawing the ones that have changed, a
     // lot of time can be saved on drawing.
     drawFlagged() {
+
+        //for (var i = 0, len = this.flaggedPixels.length; i < len; i++) {
+        //    let pixel = this.flaggedPixels[i];
+        //    this.drawSinglePixel(pixel.xCoord, pixel.yCoord);
+        //}
+
         this.flaggedPixels.forEach((pixel) => {
             this.drawSinglePixel(pixel.xCoord, pixel.yCoord);
         });
