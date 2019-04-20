@@ -14,17 +14,19 @@ class Cell {
         this.green = 0;
         this.blue = 0;
         this.alpha = 1;
-        
+
         this.canvas = parentCanvas;
     }
-    
+
     updateCell(r, g, b, a) {
-        this.red = r;
-        this.green = g;
-        this.blue = b;
-        this.alpha = a;
-        
-        this.drawColor = `rgba(${r}, ${g}, ${b}, ${a})`;
-        this.canvas.flaggedPixels.push(this);
+        if (this.red != r || this.green != g || this.blue != b || this.alpha != a) {
+            this.red = r;
+            this.green = g;
+            this.blue = b;
+            this.alpha = a;
+
+            this.drawColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+            this.canvas.flaggedPixels.push(this);
+        }
     }
 }

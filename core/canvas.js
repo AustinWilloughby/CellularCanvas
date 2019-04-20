@@ -45,7 +45,7 @@ class Canvas {
             this.pixelGrid[x] = new Array(this.verticalPixelCount);
             for (let y = 0; y < this.verticalPixelCount; y++) {
                 this.pixelGrid[x][y] = new Cell(x, y, this.pixelSize, this);
-                this.pixelGrid[x][y].updateCell(Math.random() * 255, Math.random() * 255, Math.random() * 255, 1);
+                this.pixelGrid[x][y].updateCell(25 + Math.random() * 5, 34 + Math.random() * 5, 52 + Math.random() * 5, 1);
             }
         }
 
@@ -99,7 +99,7 @@ class Canvas {
 
     // Helper function for redrawing a single cell to the canvas.
     drawSinglePixel(x, y) {
-        this.ctx.save();
+        //this.ctx.save();
 
         let pixel = this.pixelGrid[x][y];
         this.ctx.fillStyle = pixel.drawColor;
@@ -109,7 +109,7 @@ class Canvas {
             this.pixelSize,
             this.pixelSize);
 
-        this.ctx.restore();
+        //this.ctx.restore();
     }
 
     // Updates a single pixel
