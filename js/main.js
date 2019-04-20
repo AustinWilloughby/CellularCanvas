@@ -3,10 +3,6 @@ const setupCanvas = () => {
 
     let mainCanvas = new Canvas("mainCanvas", 3);
 
-    window.addEventListener('resize', () => {
-        mainCanvas.resizeCanvas();
-    });
-
 };
 
 // Call to our entry function on window.onload

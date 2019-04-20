@@ -8,11 +8,21 @@ class Canvas {
     // Setup some starter values here, and get context with the canvas.
     constructor(canvasId, pxSize) {
         this.canvas = document.getElementById(canvasId);
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
         this.pixelSize = pxSize;
 
         this.ctx = this.canvas.getContext("2d");
+        
+        this.resizeCanvas();
+        
+        window.addEventListener('resize', () => {
+            this.resizeCanvas();
+        });
+    }
+
+    // Function for handing canvas resizing.
+    resizeCanvas() {        
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
 
         // Figure out how many cells wide and tall we want the canvas to be.
         this.horizontalPixelCount = Math.trunc(this.canvas.width / this.pixelSize) + 1;
@@ -24,7 +34,7 @@ class Canvas {
             this.pixelGrid[x] = new Array(this.verticalPixelCount);
             for (let y = 0; y < this.verticalPixelCount; y++) {
                 this.pixelGrid[x][y] = new Cell(x, y, this.pixelSize);
-                this.pixelGrid[x][y].drawColor = `rgba(0, ${x}, ${y})`;
+                this.pixelGrid[x][y].drawColor = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
             }
         }
 
@@ -35,13 +45,6 @@ class Canvas {
         this.flaggedPixels = [];
 
         // Draw all the cells to the canvas
-        this.drawAll();
-    }
-
-    // Function for handing canvas resizing.
-    resizeCanvas() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
         this.drawAll();
     }
 
@@ -87,6 +90,7 @@ class Canvas {
         this.ctx.restore();
     }
 
+    // Updates a single pixel
     updatePixel(x, y, color) {
         this.pixelGrid[x][y].drawColor = color;
         this.flaggedPixels.push(this.pixelGrid[x][y]);
