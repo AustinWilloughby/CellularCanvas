@@ -10,15 +10,19 @@ class Cell {
         this.drawYPosition = y * pixelSize;
 
         this.drawColor = "black";
+        
         this.red = 0;
         this.green = 0;
         this.blue = 0;
         this.alpha = 1;
+        this.hue = 0;
+        this.saturation = 0;
+        this.lightness = 0;
 
         this.canvas = parentCanvas;
     }
 
-    updateCell(r, g, b, a) {
+    updateCellRGBA(r, g, b, a) {
         if (this.red != r || this.green != g || this.blue != b || this.alpha != a) {
             this.red = r;
             this.green = g;
@@ -26,6 +30,18 @@ class Cell {
             this.alpha = a;
 
             this.drawColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+            this.canvas.flaggedPixels.push(this);
+        }
+    }
+    
+    updateCellHSLA(h, s, l, a) {
+        if (this.hue != h || this.saturation != s || this.lightness != l || this.alpha != a) {
+            this.hue = h;
+            this.saturation = s;
+            this.lightness = l;
+            this.alpha = a;
+
+            this.drawColor = hslaStringified(h, s, l, a);
             this.canvas.flaggedPixels.push(this);
         }
     }

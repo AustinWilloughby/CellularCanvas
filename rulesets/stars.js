@@ -1,6 +1,15 @@
-const STAR_CHANCE = 0.0000001;
+const STAR_CHANCE = 0.00000025;
 const MIN_STAR_LIFETIME = 2000;
 const MAX_STAR_LIFETIME = 10000;
+
+// Used to setup the base state of information for the ruleset. May do nothing.
+const rulesetSetup = (pixelGrid, xSize, ySize) => {
+    for (let x = 0; x < xSize; x++) {
+        for (let y = 0; y < ySize; y++) {
+            pixelGrid[x][y].updateCellRGBA(25 + Math.random() * 5, 34 + Math.random() * 5, 52 + Math.random() * 5, 1);
+        }
+    }
+};
 
 const ruleset = (pixelGrid, xSize, ySize) => {
     let date = Date.now();
@@ -11,11 +20,11 @@ const ruleset = (pixelGrid, xSize, ySize) => {
             cell = pixelGrid[x][y];
 
             if (Math.random() < STAR_CHANCE) {
-                cell.updateCell(randNum(150, 255), randNum(150, 255), randNum(150, 255), 1);
+                cell.updateCellRGBA(randNum(150, 255), randNum(150, 255), randNum(150, 255), 1);
                 cell.lifetime = date + randNum(MIN_STAR_LIFETIME, MAX_STAR_LIFETIME);
                 cell.living = true;
             } else if (cell.living && date > cell.lifetime) {
-                cell.updateCell(randNum(25, 30), randNum(34, 39), randNum(52, 57), 1);
+                cell.updateCellRGBA(randNum(25, 30), randNum(34, 39), randNum(52, 57), 1);
                 cell.living = false;
             }
 
@@ -25,7 +34,7 @@ const ruleset = (pixelGrid, xSize, ySize) => {
                 let left = pixelGrid[x + 1][y];
                 let right = pixelGrid[x - 1][y];
 
-                cell.updateCell((up.red + down.red + left.red + right.red) / 4,
+                cell.updateCellRGBA((up.red + down.red + left.red + right.red) / 4,
                     (up.green + down.green + left.green + right.green) / 4,
                     (up.blue + down.blue + left.blue + right.blue) / 4, 1)
             }
@@ -39,7 +48,7 @@ const ruleset = (pixelGrid, xSize, ySize) => {
                     let left = pixelGrid[x + 1][y];
                     let right = pixelGrid[x - 1][y];
 
-                    cell.updateCell((up.red + down.red + left.red + right.red) / 4,
+                    cell.updateCellRGBA((up.red + down.red + left.red + right.red) / 4,
                         (up.green + down.green + left.green + right.green) / 4,
                         (up.blue + down.blue + left.blue + right.blue) / 4, 1);
                 } else { //Special case for edge cells. Slower, but needed for correct effect
@@ -85,7 +94,7 @@ const ruleset = (pixelGrid, xSize, ySize) => {
                     greenAverage = greenAverage / neighbors * 4;
                     blueAverage = blueAverage / neighbors * 4;
 
-                    cell.updateCell(redAverage / 4, greenAverage / 4, blueAverage / 4, 1);
+                    cell.updateCellRGBA(redAverage / 4, greenAverage / 4, blueAverage / 4, 1);
                 }
             }
 
@@ -94,7 +103,3 @@ const ruleset = (pixelGrid, xSize, ySize) => {
         }
     }
 };
-
-const randNum = (min, max) => {
-    return Math.random() * (max - min) + min;
-}

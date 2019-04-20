@@ -9,13 +9,12 @@ class Canvas {
     constructor(canvasId, pxSize) {
         this.canvas = document.getElementById(canvasId);
         this.pixelSize = pxSize;
-
         this.ctx = this.canvas.getContext("2d");
 
         this.resizeCanvas();
 
-        this.lastFrameTime = Date.now();
-
+        //this.lastFrameTime = Date.now();
+        
         this.updateLoop = this.updateLoop.bind(this);
         window.requestAnimationFrame(this.updateLoop);
 
@@ -45,9 +44,10 @@ class Canvas {
             this.pixelGrid[x] = new Array(this.verticalPixelCount);
             for (let y = 0; y < this.verticalPixelCount; y++) {
                 this.pixelGrid[x][y] = new Cell(x, y, this.pixelSize, this);
-                this.pixelGrid[x][y].updateCell(25 + Math.random() * 5, 34 + Math.random() * 5, 52 + Math.random() * 5, 1);
             }
         }
+        
+        rulesetSetup(this.pixelGrid, this.horizontalPixelCount, this.verticalPixelCount);
 
         // Draw all the cells to the canvas
         this.drawFlagged();
