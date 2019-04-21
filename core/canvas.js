@@ -14,7 +14,7 @@ class Canvas {
         this.resizeCanvas();
 
         //this.lastFrameTime = Date.now();
-        
+
         this.updateLoop = this.updateLoop.bind(this);
         window.requestAnimationFrame(this.updateLoop);
 
@@ -46,7 +46,7 @@ class Canvas {
                 this.pixelGrid[x][y] = new Cell(x, y, this.pixelSize, this);
             }
         }
-        
+
         rulesetSetup(this.pixelGrid, this.horizontalPixelCount, this.verticalPixelCount);
 
         // Draw all the cells to the canvas
@@ -99,7 +99,6 @@ class Canvas {
 
     // Helper function for redrawing a single cell to the canvas.
     drawSinglePixel(x, y) {
-        //this.ctx.save();
 
         let pixel = this.pixelGrid[x][y];
         this.ctx.fillStyle = pixel.drawColor;
@@ -108,13 +107,5 @@ class Canvas {
             pixel.drawYPosition,
             this.pixelSize,
             this.pixelSize);
-
-        //this.ctx.restore();
-    }
-
-    // Updates a single pixel
-    updatePixel(x, y, color) {
-        this.pixelGrid[x][y].drawColor = color;
-        this.flaggedPixels.push(this.pixelGrid[x][y]);
     }
 };
