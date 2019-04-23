@@ -29,8 +29,8 @@ class Canvas {
         this.canvas.height = window.innerHeight;
 
         // Figure out how many cells wide and tall we want the canvas to be.
-        this.horizontalPixelCount = Math.trunc(this.canvas.width / this.pixelSize) + 1;
-        this.verticalPixelCount = Math.trunc(this.canvas.height / this.pixelSize) + 1;
+        this.horizontalPixelCount = Math.trunc((this.canvas.width / this.pixelSize) + 0.5);
+        this.verticalPixelCount = Math.trunc((this.canvas.height / this.pixelSize) + 0.5);
 
         // Setup our array of "flagged pixels". This will be used internally
         // to keep track of all pixels that have been updated since the last
@@ -38,12 +38,15 @@ class Canvas {
         // have changed to cutdown on draw time.
         this.flaggedPixels = [];
 
+        
+        let count = 0;
         // Create our 2d array to hold our cells and populate it.
         this.pixelGrid = new Array(this.horizontalPixelCount);
         for (let x = 0; x < this.horizontalPixelCount; x++) {
             this.pixelGrid[x] = new Array(this.verticalPixelCount);
             for (let y = 0; y < this.verticalPixelCount; y++) {
                 this.pixelGrid[x][y] = new Cell(x, y, this.pixelSize, this);
+                count = count + 1;
             }
         }
 
@@ -75,7 +78,7 @@ class Canvas {
         // If the entire canvas has been redrawn, then there is
         // no point to keeping a backlog of the pixels that had
         // been previously flagged.
-        this.flaggedPixels = [];
+        this.flaggedPixels.length = 0;
     }
 
     // Redraw all of the "flagged" cells.
@@ -93,7 +96,7 @@ class Canvas {
             this.drawSinglePixel(pixel.xCoord, pixel.yCoord);
         });
 
-        this.flaggedPixels = [];
+        this.flaggedPixels.length = 0;
     }
 
 

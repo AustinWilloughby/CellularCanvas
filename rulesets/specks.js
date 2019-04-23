@@ -2,13 +2,17 @@ const STAR_CHANCE = 0.0000025;
 const MIN_STAR_LIFETIME = 2000;
 const MAX_STAR_LIFETIME = 10000;
 
+const MINIMUM_RED = 16;
+const MINIMUM_GREEN = 25;
+const MINIMUM_BLUE = 40;
+
 let lastFrame = Date.now();
 
 // Used to setup the base state of information for the ruleset. May do nothing.
 const rulesetSetup = (pixelGrid, xSize, ySize) => {
     for (let x = 0; x < xSize; x++) {
         for (let y = 0; y < ySize; y++) {
-            pixelGrid[x][y].updateCellRGBA(16, 25, 40, 1);
+            pixelGrid[x][y].updateCellRGBA(MINIMUM_RED, MINIMUM_GREEN, MINIMUM_BLUE, 1);
         }
     }
 };
@@ -23,11 +27,11 @@ const ruleset = (pixelGrid, xSize, ySize) => {
             cell = pixelGrid[x][y];
 
             if (Math.random() < STAR_CHANCE) {
-                cell.updateCellRGBA(randNum(150, 255), randNum(150, 255), randNum(150, 255), 1);
+                limitedRGBA(cell, randNum(150, 255), randNum(150, 255), randNum(150, 255), 1);
                 cell.lifetime = date + randNum(MIN_STAR_LIFETIME, MAX_STAR_LIFETIME);
                 cell.living = true;
             } else if (cell.living && date > cell.lifetime) {
-                cell.updateCellRGBA(16, 25, 40, 1);
+                limitedRGBA(cell, 16, 25, 40, 1);
                 cell.living = false;
             }
 
@@ -40,7 +44,8 @@ const ruleset = (pixelGrid, xSize, ySize) => {
                     let left = pixelGrid[x + 1][y];
                     let right = pixelGrid[x - 1][y];
 
-                    cell.updateCellRGBA((up.red + down.red + left.red + right.red) / 4.001,
+                    limitedRGBA(cell, 
+                        (up.red + down.red + left.red + right.red) / 4.001,
                         (up.green + down.green + left.green + right.green) / 4.001,
                         (up.blue + down.blue + left.blue + right.blue) / 4.001, 1);
                 } else {
@@ -87,14 +92,24 @@ const ruleset = (pixelGrid, xSize, ySize) => {
                     greenAverage = greenAverage / neighbors;
                     blueAverage = blueAverage / neighbors;
 
-                    cell.updateCellRGBA(redAverage, greenAverage, blueAverage, 1);
-                }
-
-                // Lower limit
-                if (cell.red < 16 && cell.green < 25 && cell.blue < 40) {
-                    cell.updateCellRGBA(16, 25, 40, 1);
+                    //cell.updateCellRGBA(redAverage, greenAverage, blueAverage, 1);
+                    limitedRGBA(cell, redAverage, greenAverage, blueAverage, 1);
                 }
             }
         }
     }
 };
+
+const limitedRGBA = (cell, r, g, b, a) => {
+    if(r < MINIMUM_RED && g < MINIMUM_GREEN && b < MINIMUM_BLUE){
+        r = MINIMUM_RED;
+        g = MINIMUM_GREEN;
+        b = MINIMUM_BLUE;
+    }
+    
+    if (cell.red < MINIMUM_RED && cell.green < MINIMUM_RED && cell.blue < MINIMUM_BLUE) {
+        cell.updateCellRGBA(16, 25, 40, 1);
+    } else {
+        cell.updateCellRGBA(r, g, b, a);
+    } 
+}
