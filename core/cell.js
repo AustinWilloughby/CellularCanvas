@@ -22,34 +22,34 @@ class Cell {
         this.canvas = parentCanvas;
     }
 
-//  updateCellRGBA(r, g, b, a) {
-//      if (this.red != r || this.green != g || this.blue != b || this.alpha != a) {
-//          this.red = r;
-//          this.green = g;
-//          this.blue = b;
-//          this.alpha = a;
+  updateCellRGBA(r, g, b, a) {
+      if (this.red != r || this.green != g || this.blue != b || this.alpha != a) {
+          this.red = r;
+          this.green = g;
+          this.blue = b;
+          this.alpha = a;
 
-//          this.drawColor = `rgba(${r}, ${g}, ${b}, ${a})`;
-//          
-//          this.canvas.flaggedPixels.push(this);
-//      }
-//  }
+          this.drawColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+          
+          this.canvas.flaggedPixels.push(this);
+      }
+  }
     
-    updateCellRGBA(r, g, b, a) {
-        let roundR = Math.round(r);
-        let roundG = Math.round(g);
-        let roundB = Math.round(b);
-        
-        if (this.red != roundR || this.green != roundG || this.blue != roundB || this.alpha != a) {
-            this.red = roundR;
-            this.green = roundG;
-            this.blue = roundB;
-            this.alpha = a;
+   updateCellRGBAFast(r, g, b, a) {
+       let roundR = Math.round(r);
+       let roundG = Math.round(g);
+       let roundB = Math.round(b);
+       
+       if (this.red != roundR || this.green != roundG || this.blue != roundB || this.alpha != a) {
+           this.red = roundR;
+           this.green = roundG;
+           this.blue = roundB;
+           this.alpha = a;
 
-            this.drawColor = `rgba(${roundR}, ${roundG}, ${roundB}, ${a})`;
-            this.canvas.flaggedPixels.push(this);
-        }
-    }
+           this.drawColor = `rgba(${roundR}, ${roundG}, ${roundB}, ${a})`;
+           this.canvas.flaggedPixels.push(this);
+       }
+   }
     
     updateCellHSLA(h, s, l, a) {
         if (this.hue != h || this.saturation != s || this.lightness != l || this.alpha != a) {

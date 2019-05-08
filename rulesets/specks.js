@@ -1,4 +1,4 @@
-const STAR_CHANCE = 0.0000025;
+const STAR_CHANCE = 0.00000025;
 const MIN_STAR_LIFETIME = 2000;
 const MAX_STAR_LIFETIME = 10000;
 
@@ -63,7 +63,7 @@ const ruleset = (pixelGrid, xSize, ySize) => {
                         blueAverage += checkCell.blue;
                         neighbors++;
                     }
-
+                    
                     if (x < xSize - 1) {
                         checkCell = pixelGrid[x + 1][y];
                         redAverage += checkCell.red;
@@ -79,7 +79,7 @@ const ruleset = (pixelGrid, xSize, ySize) => {
                         blueAverage += checkCell.blue;
                         neighbors++;
                     }
-
+                    
                     if (y < ySize - 1) {
                         checkCell = pixelGrid[x][y + 1];
                         redAverage += checkCell.red;
@@ -92,7 +92,6 @@ const ruleset = (pixelGrid, xSize, ySize) => {
                     greenAverage = greenAverage / neighbors;
                     blueAverage = blueAverage / neighbors;
 
-                    //cell.updateCellRGBA(redAverage, greenAverage, blueAverage, 1);
                     limitedRGBA(cell, redAverage, greenAverage, blueAverage, 1);
                 }
             }
