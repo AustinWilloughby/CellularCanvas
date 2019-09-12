@@ -1,3 +1,13 @@
+const TARGET_FPS = 60;
+let fpsInterval = 0;
+let currentTime = 0;
+let elapsedTime = 0;
+let thenTime = 0;
+
+let startTime = Date.now();
+let frameCount = 0;
+
+
 // Canvas Class: this will take care of managing the canvas.
 // The idea is that we can break the canvas into "cells", which
 // are essentially large pixels (something like 10px by 10px).
@@ -14,6 +24,8 @@ class Canvas {
     this.resizeCanvas();
 
     //this.lastFrameTime = Date.now();
+
+    fpsInterval = TARGET_FPS / 1000;
 
     this.updateLoop = this.updateLoop.bind(this);
     window.requestAnimationFrame(this.updateLoop);
@@ -57,14 +69,20 @@ class Canvas {
   }
 
   updateLoop() {
-
-    //const deltaTime = Date.now() - this.lastFrameTime;
-    //this.lastFrameTime = Date.now();
-
-    ruleset(this.pixelGrid, this.horizontalPixelCount, this.verticalPixelCount);
-    this.drawFlagged();
-
+    frameCount++;
     requestAnimationFrame(this.updateLoop);
+
+    currentTime = Date.now();
+    elapsedTime = currentTime - thenTime;
+    
+    console.dir((Date.now() - startTime) / frameCount);
+
+    if (elapsedTime > fpsInterval) {
+      thenTime = currentTime - (elapsedTime % fpsInterval);
+      
+      ruleset(this.pixelGrid, this.horizontalPixelCount, this.verticalPixelCount);
+      this.drawFlagged();
+    }
   }
 
   // Redraw all of the cells in our cell array.
