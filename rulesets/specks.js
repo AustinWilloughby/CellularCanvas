@@ -19,7 +19,7 @@ const rulesetSetup = (pixelGrid, xSize, ySize) => {
   document.querySelector('#mainCanvas').addEventListener('click', function (evt) {
     if (audioStopped) {
       audioCtx.resume().then(() => {
-        let freeverb = new Tone.Freeverb().toMaster;
+        let freeverb = new Tone.Freeverb().toMaster();
         
         synth = new Tone.PolySynth(24, Tone.AMSynth, {
           envelope: {
