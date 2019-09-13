@@ -69,14 +69,14 @@ class Canvas {
   }
 
   updateLoop() {
-    frameCount++;
+    // Request the next update frame.
     requestAnimationFrame(this.updateLoop);
 
+    // Keep track of the timestep since the last animation frame.
     currentTime = Date.now();
     elapsedTime = currentTime - thenTime;
-    
-    console.dir((Date.now() - startTime) / frameCount);
 
+    // Prevent the framerate from going too high. Try to force 60fps.
     if (elapsedTime > fpsInterval) {
       thenTime = currentTime - (elapsedTime % fpsInterval);
       
