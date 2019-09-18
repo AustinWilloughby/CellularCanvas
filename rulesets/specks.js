@@ -6,7 +6,8 @@ const MINIMUM_RED = 16;
 const MINIMUM_GREEN = 25;
 const MINIMUM_BLUE = 40;
 
-let possibleNotes = ['C', 'D', 'E', 'F', 'G'];
+let possibleNotes = ['C', 'D', 'E', 'G', 'A'];
+let currentChord = [''];
 
 let audioCtx = new AudioContext();
 let synth;
@@ -19,23 +20,26 @@ const rulesetSetup = (pixelGrid, xSize, ySize) => {
   document.querySelector('#mainCanvas').addEventListener('click', function (evt) {
     if (audioStopped) {
       audioCtx.resume().then(() => {
-        let freeverb = new Tone.Freeverb().toMaster();
-        
+        let freeverb = new Tone.Freeverb({
+          roomSize: 0.6,
+        }).toMaster();
+
         synth = new Tone.PolySynth(24, Tone.AMSynth, {
           envelope: {
-            attack: 0.25,
-            decay: 0.1,
+            attack: 0.2,
+            decay: 0.2,
             sustain: 0.3,
-            release: 2.5,
-          }
-        }).connect(freeverb)
+            release: 1.5,
+          },
+          volume: -18,
+        }).connect(freeverb);
         audioStopped = false;
         console.log("Audio Resumed");
       });
     }
   });
-  
-  regularlyChangeScale();
+
+  //regularlyChangeScale();
 
   for (let x = 0; x < xSize; x++) {
     for (let y = 0; y < ySize; y++) {
@@ -60,7 +64,7 @@ const ruleset = (pixelGrid, xSize, ySize) => {
         cell.living = true;
 
         if (!audioStopped) {
-          synth.triggerAttackRelease(selectRandomNote(2,5), lifeTime / 1000);
+          synth.triggerAttackRelease(selectRandomNote(2, 5), lifeTime / 1000);
         }
       } else if (cell.living && currentTime > cell.timeOfDeath) {
         limitedRGBA(cell, 16, 25, 40, 1);
@@ -165,11 +169,10 @@ const mutatePossibleNotes = () => {
 }
 
 const selectRandomNote = (lowOctave, highOctave) => {
-  return `${possibleNotes[randInt(0, possibleNotes.length - 1)]}${randInt(lowOctave, highOctave)}`; 
+  return `${possibleNotes[randInt(0, possibleNotes.length - 1)]}${randInt(lowOctave, highOctave)}`;
 }
 
 const regularlyChangeScale = () => {
   mutatePossibleNotes();
-  window.setTimeout (regularlyChangeScale, randInt(10000, 30000));
+  window.setTimeout(regularlyChangeScale, randInt(30000, 60000));
 }
-
