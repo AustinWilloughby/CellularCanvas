@@ -1,4 +1,4 @@
-const STAR_CHANCE = 0.0000001;
+const STAR_CHANCE = 0.0000002;
 const MIN_STAR_LIFETIME = 5000;
 const MAX_STAR_LIFETIME = 20000;
 
@@ -6,8 +6,7 @@ const MINIMUM_RED = 16;
 const MINIMUM_GREEN = 25;
 const MINIMUM_BLUE = 40;
 
-let possibleNotes = ['C', 'D', 'E', 'G', 'A'];
-let currentChord = [''];
+let possibleNotes = ['C', 'D', 'E', 'G', 'A',];
 
 let audioCtx = new AudioContext();
 let synth;
@@ -21,25 +20,26 @@ const rulesetSetup = (pixelGrid, xSize, ySize) => {
     if (audioStopped) {
       audioCtx.resume().then(() => {
         let freeverb = new Tone.Freeverb({
-          roomSize: 0.6,
+          roomSize: .9,
         }).toMaster();
 
+        let wah = new Tone.AutoWah(100, 6, -30);
+        
         synth = new Tone.PolySynth(24, Tone.AMSynth, {
           envelope: {
-            attack: 0.2,
-            decay: 0.2,
+            attack: 1.2,
+            decay: 1.2,
             sustain: 0.3,
             release: 1.5,
           },
-          volume: -18,
-        }).connect(freeverb);
+          volume: -29,
+        }).connect(freeverb).connect(wah);
         audioStopped = false;
-        console.log("Audio Resumed");
       });
     }
   });
 
-  //regularlyChangeScale();
+  regularlyChangeScale();
 
   for (let x = 0; x < xSize; x++) {
     for (let y = 0; y < ySize; y++) {
@@ -64,7 +64,7 @@ const ruleset = (pixelGrid, xSize, ySize) => {
         cell.living = true;
 
         if (!audioStopped) {
-          synth.triggerAttackRelease(selectRandomNote(2, 5), lifeTime / 1000);
+          synth.triggerAttackRelease(selectRandomNote(2, 4), lifeTime / 1000);
         }
       } else if (cell.living && currentTime > cell.timeOfDeath) {
         limitedRGBA(cell, 16, 25, 40, 1);
